@@ -1,0 +1,91 @@
+<html>
+<head>
+
+<style>
+ #mainBox {
+   margin:auto;
+   border-style:solid;
+   border-width:2px;
+   border-color:blue;
+   color: black;
+   height:60%;
+   width:50%;
+   padding:10px;
+   background-color:E7F6F2;
+   }
+ #heading{
+   margin:auto;
+    width:20%;
+   color:395B64;
+ }  
+</style>
+<script>
+
+function getData(){   // In this function we fetch data from the server using the fetch API
+
+const url= 'http://localhost:8080/resume/getDetails';
+
+fetch(url)                                                     // Fetch takes url as parameter and return response object
+  .then((response) => response.json())
+  .then((data) =>{ 
+      document.getElementById("firstName").value=data.userFirstName;
+      document.getElementById("lastName").value=data.userLastName;
+      document.getElementById("email").value=data.userEmail;
+      document.getElementById("mobileNumber").value=data.userMobileNumber;
+      document.getElementById("skills").value=data.userSkills;
+  } );
+}
+
+ function updateData(){                                                   // In this method we push the data to the server using post request 
+     var userFirstName=document.getElementById("firstName").value;         // and send the data in Json body format.
+     var userLastName=document.getElementById("lastName").value;
+     var userEmail=document.getElementById("email").value;
+     var userMobileNumber=document.getElementById("mobileNumber").value;
+     var userSkills=document.getElementById("skills").value;
+     
+     const data= {firstName:userFirstName, lastName:userLastName, email:userEmail, mobileNumber:userMobileNumber, skills:userSkills};
+     const url_update = 'http://localhost:8080/resume/updateDetails'
+     
+     fetch(url_update, {
+  method: 'POST', 
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data),
+}).then((response) => response.json())
+.then((data) => {
+  document.getElementById("updated box").innerHTML=data.message;
+})
+.catch((error) => {
+  console.error('Error:', error);
+});
+     
+     
+     
+     
+ }
+</script>
+
+</head>
+<body style="background-color:F1F1F1;">
+<div id="heading"><h1 >My Resume</h1></div>
+<br>
+<div id="mainBox">
+<label id="pos">First Name</label><br>
+<input id="firstName" type="text"><br><br>
+<label>Last Name</label><br>
+<input id="lastName" type="text"><br><br>
+<label>Email</label><br>
+<input id="email" type="text" size=50><br><br>
+<label>Mobile Number</label><br>
+<input id="mobileNumber" type="text"><br><br>
+<label>Skills</label><br>
+<input id="skills" type="text"><br><br>
+<span>
+<button type="button" onclick="getData()">Show Resume</button>
+<button type="button" onclick="updateData()">Update</button>
+</span>
+</div>
+<div><h2 id="updated box"></h2><div>
+</body>
+</html>
